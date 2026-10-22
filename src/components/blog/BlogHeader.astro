@@ -1,0 +1,36 @@
+---
+import TopicNav from "@/components/blog/TopicNav.astro";
+import Icon from "@/components/ui/Icon.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  topic?: string;
+}
+
+const { title, description, topic } = Astro.props;
+---
+
+<header class="pt-14 pb-12 sm:pt-20 lg:pb-14">
+  <div class="shell">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+      <div class="max-w-2xl">
+        <h1 class="rise text-display-xl">{title}</h1>
+        <p class="rise mt-5 text-lead text-muted" style="--i:1">{description}</p>
+      </div>
+      <button
+        type="button"
+        class="rise flex h-11 w-full max-w-xs items-center gap-3 rounded-lg bg-surface px-3.5 text-[0.9375rem] text-muted shadow-[inset_0_0_0_1px_var(--line-strong)] transition-colors hover:text-ink"
+        style="--i:2"
+        data-search-open
+      >
+        <Icon name="search" class="size-4" />
+        <span class="flex-1 text-left">Search posts</span>
+        <kbd class="rounded bg-wash px-1.5 py-0.5 font-sans text-xs font-medium shadow-[inset_0_0_0_1px_var(--line)]">⌘K</kbd>
+      </button>
+    </div>
+    <div class="rise mt-10 border-b border-line" style="--i:3">
+      <TopicNav current={topic} />
+    </div>
+  </div>
+</header>

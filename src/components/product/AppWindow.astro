@@ -1,0 +1,38 @@
+---
+import Logomark from "@/components/ui/Logomark.astro";
+
+interface Props {
+  /** Breadcrumb trail in the title bar, last item is the current page. */
+  trail: string[];
+  /** A status pill on the right of the title bar. */
+  status?: string;
+  class?: string;
+}
+
+const { trail, status, class: className } = Astro.props;
+---
+
+<div class:list={["app-window overflow-hidden rounded-2xl bg-surface shadow-(--shadow-window) ring-1 ring-line", className]}>
+  <div class="flex h-11 items-center gap-2.5 border-b border-line px-3.5 text-[0.8125rem]">
+    <Logomark class="size-5" />
+    <span class="flex min-w-0 items-center gap-1.5">
+      {
+        trail.map((item, index) => (
+          <>
+            {index > 0 && <span class="text-line-strong">/</span>}
+            <span class:list={["truncate", index === trail.length - 1 ? "font-medium" : "text-muted max-sm:hidden"]}>{item}</span>
+          </>
+        ))
+      }
+    </span>
+    {
+      status && (
+        <span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md bg-mint-soft px-2 py-0.5 text-[0.75rem] font-medium text-green">
+          <span class="size-1.5 rounded-full bg-green" />
+          {status}
+        </span>
+      )
+    }
+  </div>
+  <slot />
+</div>

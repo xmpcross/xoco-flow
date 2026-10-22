@@ -1,0 +1,21 @@
+---
+import FlowNode from "@/components/product/FlowNode.astro";
+import Icon from "@/components/ui/Icon.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found" description="The page you were looking for does not exist or has moved." noindex>
+  <section class="shell grid min-h-[calc(100svh-var(--header-h))] content-center justify-items-center py-24 text-center">
+    <div class="rise dot-grid grid w-full max-w-sm justify-items-center rounded-2xl px-6 py-8" aria-hidden="true">
+      <FlowNode icon="link" tone="blue" kind="Trigger" title="Link followed" status="done" class="w-full" />
+      <span class="block h-6 w-[1.5px] bg-line-strong"></span>
+      <FlowNode icon="circle-alert" tone="amber" kind="Step" title="Page not found" sub="Error 404" class="w-full" />
+    </div>
+    <h1 class="rise mt-12 text-display-lg" style="--i:1">This step leads nowhere</h1>
+    <p class="rise mt-4 max-w-md text-lead text-muted" style="--i:2">The page may have moved, or the link was mistyped. Try the homepage or the blog.</p>
+    <div class="rise mt-9 flex flex-wrap justify-center gap-3" style="--i:3">
+      <a href="/" class="btn btn-primary">Back home <Icon name="arrow-right" class="btn-arrow" stroke={2} /></a>
+      <a href="/blog/" class="btn btn-secondary">Read the blog</a>
+    </div>
+  </section>
+</BaseLayout>

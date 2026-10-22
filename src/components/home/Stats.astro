@@ -1,0 +1,25 @@
+---
+import { stats } from "@/config/home";
+import { siteConfig } from "@/config/site";
+
+interface Props {
+  items?: { value: string; label: string }[];
+  class?: string;
+}
+
+const { items = stats, class: className } = Astro.props;
+const columns = items.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4";
+---
+
+<section class:list={["pb-20 sm:pb-28", className]} aria-label={`${siteConfig.name} in numbers`}>
+  <dl class:list={["shell grid grid-cols-2 gap-x-6 gap-y-10", columns]}>
+    {
+      items.map((item, index) => (
+        <div class="reveal flex flex-col border-t border-line pt-6" style={`--i:${index}`}>
+          <dt class="order-2 mt-2 max-w-64 text-[0.9375rem] text-muted">{item.label}</dt>
+          <dd class="order-1 text-display-md tabular">{item.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

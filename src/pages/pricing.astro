@@ -1,0 +1,46 @@
+---
+import Closing from "@/components/home/Closing.astro";
+import Faq from "@/components/home/Faq.astro";
+import LogoRow from "@/components/home/LogoRow.astro";
+import BillingToggle from "@/components/pricing/BillingToggle.astro";
+import CompareTable from "@/components/pricing/CompareTable.astro";
+import PlanCards from "@/components/pricing/PlanCards.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { pricing } from "@/config/pricing";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Pricing" description={pricing.lead}>
+  <section class="pt-14 pb-12 text-center sm:pt-20">
+    <div class="shell">
+      <h1 class="rise mx-auto max-w-3xl text-display-xl">{pricing.title}</h1>
+      <p class="rise mx-auto mt-6 max-w-2xl text-lead text-muted" style="--i:1">{pricing.lead}</p>
+      <BillingToggle class="rise mx-auto mt-10" />
+    </div>
+  </section>
+
+  <section class="shell" aria-label="Plans">
+    <PlanCards />
+    <ul class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted">
+      {
+        pricing.notes.map((note) => (
+          <li class="inline-flex items-center gap-1.5">
+            <Icon name="check" class="size-4 text-green" stroke={2.25} />
+            {note}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <LogoRow class="mt-6" />
+
+  <section class="shell pb-16 lg:pb-24" aria-labelledby="compare-title">
+    <h2 id="compare-title" class="reveal mb-6 text-display-md">{pricing.compareTitle}</h2>
+    <CompareTable />
+  </section>
+
+  <Faq id="pricing-faq" {...pricing.faq} class="bg-wash" />
+
+  <Closing class="pt-16 sm:pt-24" />
+</BaseLayout>

@@ -1,0 +1,71 @@
+---
+import AppIcon from "@/components/ui/AppIcon.astro";
+import Icon from "@/components/ui/Icon.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const invoices = [
+  { company: "Brightloom", amount: "$12,400", days: 41, status: "Held for review" },
+  { company: "Okapi Studio", amount: "$3,150", days: 34, status: "Draft ready" },
+  { company: "Mersey Freight", amount: "$7,820", days: 32, status: "Draft ready" },
+];
+---
+
+<div class:list={["agent-panel on-light overflow-hidden rounded-2xl bg-surface text-ink shadow-(--shadow-window)", className]}>
+  <div class="flex items-center gap-3 border-b border-line px-5 py-4">
+    <span class="grid size-9 place-items-center rounded-[28%] bg-ink text-mint">
+      <Icon name="bot" class="size-[1.1rem]" stroke={2} />
+    </span>
+    <span class="min-w-0">
+      <span class="block text-[0.9375rem] font-semibold tracking-[-0.01em]">Collections agent</span>
+      <span class="block text-[0.8125rem] text-muted">Runs weekdays at 9:00</span>
+    </span>
+    <span class="ml-auto flex -space-x-1">
+      <AppIcon name="xero" class="size-7 ring-2 ring-surface" />
+      <AppIcon name="hubspot" class="size-7 ring-2 ring-surface" />
+      <AppIcon name="gmail" class="size-7 ring-2 ring-surface" />
+    </span>
+  </div>
+
+  <div class="px-5 py-5">
+    <p class="text-[0.9375rem] leading-relaxed">
+      14 invoices are more than 30 days overdue, <span class="font-semibold tabular">$48,210</span> in total. I drafted reminders in your tone of voice. Three accounts are on strategic plans, so I held those for you.
+    </p>
+
+    <ul class="mt-5 divide-y divide-line rounded-xl ring-1 ring-line">
+      {
+        invoices.map((invoice) => (
+          <li class="flex items-center gap-3 px-3.5 py-2.5 text-[0.875rem]">
+            <span class="min-w-0 flex-1 truncate font-medium">{invoice.company}</span>
+            <span class="w-16 text-right tabular">{invoice.amount}</span>
+            <span class="hidden w-16 text-right text-muted tabular sm:block">{invoice.days} days</span>
+            <span
+              class:list={[
+                "w-28 shrink-0 rounded-md px-2 py-0.5 text-center text-[0.75rem] font-medium",
+                invoice.status === "Held for review" ? "bg-amber-soft text-amber" : "bg-mint-soft text-green",
+              ]}
+            >
+              {invoice.status}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-5 flex flex-wrap gap-2">
+      <span class="inline-flex h-9 items-center gap-1.5 rounded-lg bg-ink px-3.5 text-[0.875rem] font-medium text-white">
+        <Icon name="send" class="size-3.5" stroke={2} /> Send 11 reminders
+      </span>
+      <span class="inline-flex h-9 items-center rounded-lg px-3.5 text-[0.875rem] font-medium shadow-[inset_0_0_0_1px_var(--line-strong)]">Review 3</span>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-line bg-wash px-5 py-3 text-[0.75rem] text-muted">
+    <span class="inline-flex items-center gap-1.5"><Icon name="scroll-text" class="size-3.5" /> Policy: Collections v3</span>
+    <span class="inline-flex items-center gap-1.5"><Icon name="eye" class="size-3.5" /> Every step logged</span>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  lead?: string;
+  align?: "center" | "start";
+  /** Heading id, for `aria-labelledby` on the section. */
+  id?: string;
+  class?: string;
+}
+
+const { title, lead, align = "start", id, class: className } = Astro.props;
+---
+
+<div class:list={["reveal", align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl", className]}>
+  <h2 id={id} class="text-display-lg">{title}</h2>
+  {lead && <p class:list={["mt-5 text-lead text-muted", align === "center" && "mx-auto max-w-2xl"]}>{lead}</p>}
+  <slot />
+</div>

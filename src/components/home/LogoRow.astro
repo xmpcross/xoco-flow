@@ -1,0 +1,26 @@
+---
+import CompanyLogo from "@/components/ui/CompanyLogo.astro";
+import { logoRow } from "@/config/home";
+
+interface Props {
+  title?: string;
+  class?: string;
+}
+
+const { title = logoRow.title, class: className } = Astro.props;
+---
+
+<section class:list={["py-14 sm:py-16", className]} aria-labelledby="logos-title">
+  <div class="shell">
+    <h2 id="logos-title" class="text-center text-[0.9375rem] text-muted">{title}</h2>
+    <ul class="mt-9 grid grid-cols-2 items-center gap-x-6 gap-y-8 text-[0.85rem] sm:grid-cols-4 sm:text-[0.95rem] lg:flex lg:justify-between">
+      {
+        logoRow.items.map((name) => (
+          <li class="flex justify-center text-ink/70">
+            <CompanyLogo name={name} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

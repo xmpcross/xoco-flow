@@ -1,0 +1,35 @@
+---
+import AgentPanel from "@/components/product/AgentPanel.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { agents } from "@/config/home";
+
+const { id, title, lead, points, cta } = agents;
+---
+
+<section id={id} class="on-night section" aria-labelledby={`${id}-title`}>
+  <div class="shell grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+    <div class="reveal lg:col-span-5">
+      <h2 id={`${id}-title`} class="text-display-lg">{title}</h2>
+      <p class="mt-5 text-lead text-muted">{lead}</p>
+      <a href={cta.href} class="btn btn-mint mt-9">
+        {cta.label}
+        <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+      </a>
+    </div>
+    <div class="reveal lg:col-span-7 lg:pl-8">
+      <AgentPanel />
+    </div>
+  </div>
+
+  <ul class="shell mt-16 grid gap-10 sm:grid-cols-3 sm:gap-8 lg:mt-24">
+    {
+      points.map((point, index) => (
+        <li class="reveal border-t border-night-line pt-6" style={`--i:${index}`}>
+          <Icon name={point.icon} class="size-6 text-mint" />
+          <h3 class="mt-4 text-lg font-medium tracking-tight">{point.title}</h3>
+          <p class="mt-2 text-muted">{point.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

@@ -1,0 +1,60 @@
+---
+import AppIcon from "@/components/ui/AppIcon.astro";
+import Icon from "@/components/ui/Icon.astro";
+
+export type NodeTone = "mint" | "amber" | "violet" | "blue" | "ink";
+
+interface Props {
+  title: string;
+  sub?: string;
+  /** An integration file name. Takes precedence over `icon`. */
+  app?: string;
+  /** A Lucide icon name, drawn on a tinted tile. */
+  icon?: string;
+  tone?: NodeTone;
+  /** A small label above the title, such as "Trigger". */
+  kind?: string;
+  status?: "done" | "waiting" | "none";
+  class?: string;
+  style?: string;
+}
+
+const { title, sub, app, icon = "zap", tone = "mint", kind, status = "none", class: className, style } = Astro.props;
+
+const tones: Record<NodeTone, string> = {
+  mint: "bg-mint text-ink",
+  amber: "bg-amber-soft text-amber",
+  violet: "bg-violet-soft text-violet",
+  blue: "bg-blue-soft text-blue",
+  ink: "bg-ink text-mint",
+};
+---
+
+<div class:list={["flow-node flex min-w-0 items-center gap-3 rounded-xl bg-surface p-2.5 pr-3 text-left shadow-[0_0_0_1px_var(--line),0_1px_2px_rgb(6_34_38/0.05)]", className]} style={style}>
+  {
+    app ? (
+      <AppIcon name={app} class="size-9" />
+    ) : (
+      <span class:list={["grid size-9 shrink-0 place-items-center rounded-[28%]", tones[tone]]}>
+        <Icon name={icon} class="size-[1.1rem]" stroke={2} />
+      </span>
+    )
+  }
+  <span class="min-w-0 flex-1">
+    {kind && <span class="block text-[0.6875rem] leading-tight font-medium text-muted">{kind}</span>}
+    <span class="block truncate text-[0.875rem] leading-snug font-semibold tracking-[-0.01em]">{title}</span>
+    {sub && <span class="node-sub block truncate text-[0.75rem] leading-snug text-muted">{sub}</span>}
+  </span>
+  {
+    status === "done" && (
+      <span class="node-status grid size-5 shrink-0 place-items-center rounded-full bg-green text-white">
+        <Icon name="check" class="size-3" stroke={3} />
+      </span>
+    )
+  }
+  {
+    status === "waiting" && (
+      <span class="node-status shrink-0 rounded-md bg-amber-soft px-1.5 py-0.5 text-[0.6875rem] font-semibold text-amber">Waiting</span>
+    )
+  }
+</div>
