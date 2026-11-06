@@ -1,0 +1,144 @@
+---
+import { Image } from "astro:assets";
+import Stats from "@/components/home/Stats.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { about } from "@/config/about";
+import { careers } from "@/config/careers";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About" description={about.lead} image={about.photo} imageAlt={about.photoAlt}>
+  <section class="pt-14 sm:pt-20" aria-labelledby="about-title">
+    <div class="shell">
+      <div class="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
+        <h1 id="about-title" class="rise text-display-xl lg:col-span-7">{about.title}</h1>
+        <p class="rise text-lead text-muted lg:col-span-5 lg:pb-2" style="--i:1">{about.lead}</p>
+      </div>
+      <Image
+        src={about.photo}
+        alt={about.photoAlt}
+        widths={[800, 1200, 1600, 2000]}
+        sizes="(min-width: 80rem) 1216px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="rise mt-12 aspect-video w-full rounded-3xl object-cover sm:mt-16"
+        style="--i:2"
+      />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="story-title">
+    <div class="shell grid gap-8 lg:grid-cols-12 lg:gap-10">
+      <h2 id="story-title" class="reveal text-display-md lg:col-span-4">{about.story.title}</h2>
+      <div class="reveal grid gap-5 text-lead lg:col-span-7 lg:col-start-6">
+        {about.story.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <Stats items={about.facts} />
+
+  <section class="section bg-wash" aria-labelledby="principles-title">
+    <div class="shell">
+      <h2 id="principles-title" class="reveal text-display-md">{about.principlesTitle}</h2>
+      <ul class="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
+        {
+          about.principles.map((item, index) => (
+            <li class="reveal border-t border-line-strong pt-6" style={`--i:${index}`}>
+              <Icon name={item.icon} class="size-6" />
+              <h3 class="mt-5 text-title">{item.title}</h3>
+              <p class="mt-2 text-muted">{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="milestones-title">
+    <div class="shell">
+      <h2 id="milestones-title" class="reveal text-display-md">{about.milestonesTitle}</h2>
+      <ol class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        {
+          about.milestones.map((item, index) => (
+            <li class="milestone reveal relative pt-8" style={`--i:${index}`}>
+              <span class="absolute top-0 left-0 size-3 rounded-full bg-ink ring-4 ring-mint" aria-hidden="true" />
+              <p class="text-display-md tabular">{item.year}</p>
+              <h3 class="mt-3 text-lg font-medium tracking-tight">{item.title}</h3>
+              <p class="mt-1.5 text-muted">{item.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="pb-20 sm:pb-28" aria-labelledby="team-title">
+    <div class="shell">
+      <h2 id="team-title" class="reveal border-t border-line pt-14 text-display-md">{about.teamTitle}</h2>
+      <ul class="mt-12 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-6">
+        {
+          about.team.map((person, index) => (
+            <li class="reveal" style={`--i:${index % 6}`}>
+              <Image
+                src={person.photo}
+                alt={`Portrait of ${person.name}`}
+                widths={[240, 360, 480]}
+                sizes="(min-width: 64rem) 12rem, (min-width: 48rem) 30vw, 45vw"
+                class="aspect-4/5 w-full rounded-2xl object-cover object-top"
+              />
+              <h3 class="mt-4 font-medium">{person.name}</h3>
+              <p class="text-sm text-muted">{person.role}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="pb-20 sm:pb-28" aria-labelledby="investors-title">
+    <div class="shell">
+      <h2 id="investors-title" class="text-center text-[0.9375rem] text-muted">{about.investorsTitle}</h2>
+      <ul class="mt-6 flex flex-wrap justify-center gap-x-10 gap-y-4 text-xl font-medium tracking-tight text-ink/70">
+        {about.investors.map((name) => <li>{name}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="pb-16 sm:pb-24" aria-labelledby="join-title">
+    <div class="shell">
+      <div class="on-night reveal flex flex-col gap-8 rounded-3xl px-6 py-14 sm:px-12 lg:flex-row lg:items-end lg:justify-between lg:px-16 lg:py-16">
+        <div class="max-w-xl">
+          <h2 id="join-title" class="text-display-lg">{about.closing.title}</h2>
+          <p class="mt-5 text-lead text-muted">{about.closing.body}</p>
+        </div>
+        <a href={about.closing.cta.href} class="btn btn-mint btn-lg shrink-0 self-start lg:self-auto">
+          {about.closing.cta.label} ({careers.roles.length})
+          <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .milestone::before {
+    content: "";
+    position: absolute;
+    top: 0.3125rem;
+    left: 1.5rem;
+    right: -2rem;
+    height: 1.5px;
+    background: var(--line-strong);
+  }
+
+  .milestone:last-child::before {
+    right: 0;
+  }
+
+  @media (max-width: 63.99rem) {
+    .milestone::before {
+      right: 0;
+    }
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import Agents from "@/components/home/Agents.astro";
+import Closing from "@/components/home/Closing.astro";
+import Faq from "@/components/home/Faq.astro";
+import Hero from "@/components/home/Hero.astro";
+import HowItWorks from "@/components/home/HowItWorks.astro";
+import Integrations from "@/components/home/Integrations.astro";
+import LatestPosts from "@/components/home/LatestPosts.astro";
+import LogoRow from "@/components/home/LogoRow.astro";
+import Security from "@/components/home/Security.astro";
+import Stats from "@/components/home/Stats.astro";
+import Stories from "@/components/home/Stories.astro";
+import Teams from "@/components/home/Teams.astro";
+import { faq } from "@/config/home";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <Hero />
+  <LogoRow />
+  <HowItWorks />
+  <Stats />
+  <Agents />
+  <Teams />
+  <Integrations />
+  <Stories />
+  <Security />
+  <Faq {...faq} />
+  <LatestPosts />
+  <Closing />
+</BaseLayout>

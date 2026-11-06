@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import Closing from "@/components/home/Closing.astro";
+import LogoRow from "@/components/home/LogoRow.astro";
+import Stats from "@/components/home/Stats.astro";
+import CompanyLogo from "@/components/ui/CompanyLogo.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { customersPage, stories } from "@/config/customers";
+import { solutionPages } from "@/config/solutions";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const { title, heading, lead, logoTitle, storiesTitle } = customersPage;
+const [featured, ...rest] = [stories[4], ...stories.filter((_, index) => index !== 4)];
+const teamName = (slug: string) => solutionPages.find((page) => page.slug === slug)?.name ?? slug;
+---
+
+<BaseLayout title={title} description={lead}>
+  <section class="pt-14 sm:pt-20" aria-labelledby="customers-title">
+    <div class="shell">
+      <h1 id="customers-title" class="rise max-w-3xl text-display-xl">{heading}</h1>
+      <p class="rise mt-6 max-w-2xl text-lead text-muted" style="--i:1">{lead}</p>
+    </div>
+  </section>
+
+  <LogoRow title={logoTitle} />
+
+  {
+    featured && (
+      <section class="shell" aria-label={`${featured.company} customer story`}>
+        <div class="reveal grid overflow-hidden rounded-3xl bg-wash lg:grid-cols-2">
+          <Image
+            src={featured.photo}
+            alt={`${featured.name}, ${featured.role} at ${featured.company}`}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 64rem) 38rem, 100vw"
+            loading="eager"
+            class="aspect-4/3 size-full object-cover object-top lg:aspect-auto"
+          />
+          <figure class="flex flex-col p-7 sm:p-10 lg:p-14">
+            <span class="flex items-center justify-between gap-4">
+              <CompanyLogo name={featured.company} class="text-lg" />
+              <span class="tag bg-surface">{featured.industry}</span>
+            </span>
+            <blockquote class="mt-10 text-[clamp(1.35rem,1.1rem+0.9vw,2rem)] leading-snug font-medium tracking-[-0.025em]">
+              <p>“{featured.quote}”</p>
+            </blockquote>
+            <figcaption class="mt-auto pt-10">
+              <span class="block font-medium">{featured.name}</span>
+              <span class="block text-muted">{featured.role}, {featured.company}</span>
+            </figcaption>
+            <p class="mt-8 border-t border-line-strong pt-6">
+              <span class="block text-display-md tabular">{featured.metric.value}</span>
+              <span class="block text-muted">{featured.metric.label}</span>
+            </p>
+          </figure>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="stories-title">
+    <div class="shell">
+      <h2 id="stories-title" class="reveal text-display-md">{storiesTitle}</h2>
+      <ul class="mt-10 grid gap-5 md:grid-cols-2">
+        {
+          rest.map((story, index) => (
+            <li class="card reveal flex flex-col p-7 sm:p-8" style={`--i:${index % 2}`}>
+              <span class="flex items-center justify-between gap-4">
+                <CompanyLogo name={story.company} class="text-[1.05rem]" />
+                <span class="text-sm text-muted">{story.industry}</span>
+              </span>
+              <p class="mt-8 text-display-md tabular">{story.metric.value}</p>
+              <p class="mt-1 text-muted">{story.metric.label}</p>
+              <blockquote class="mt-8 border-t border-line pt-6 text-[1.0625rem] leading-relaxed">
+                <p>“{story.quote}”</p>
+              </blockquote>
+              <div class="mt-auto flex items-center gap-3 pt-8">
+                <Image src={story.photo} alt="" widths={[96, 144]} sizes="3rem" class="size-12 rounded-full object-cover object-top" />
+                <span class="min-w-0">
+                  <span class="block font-medium">{story.name}</span>
+                  <span class="block truncate text-sm text-muted">{story.role}</span>
+                </span>
+                <a href={`/solutions/${story.team}/`} class="arrow-link group ml-auto shrink-0 text-sm">
+                  {teamName(story.team)}
+                  <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Stats />
+
+  <Closing />
+</BaseLayout>

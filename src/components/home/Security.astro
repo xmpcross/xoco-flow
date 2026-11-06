@@ -1,0 +1,37 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { security } from "@/config/home";
+
+const { id, title, lead, badges, items } = security;
+---
+
+<section id={id} class="section bg-wash" aria-labelledby={`${id}-title`}>
+  <div class="shell grid gap-14 lg:grid-cols-12 lg:gap-10">
+    <div class="reveal lg:col-span-5">
+      <h2 id={`${id}-title`} class="text-display-lg">{title}</h2>
+      <p class="mt-5 text-lead text-muted">{lead}</p>
+      <ul class="mt-9 grid max-w-md grid-cols-2 gap-3">
+        {
+          badges.map((badge) => (
+            <li class="flex items-center gap-2.5 rounded-xl bg-surface px-3.5 py-3 text-[0.9375rem] font-medium shadow-[inset_0_0_0_1px_var(--line)]">
+              <Icon name="badge-check" class="size-5 text-green" />
+              {badge}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <ul class="grid gap-x-10 sm:grid-cols-2 lg:col-span-7">
+      {
+        items.map((item, index) => (
+          <li class="reveal border-t border-line-strong py-7" style={`--i:${index % 2}`}>
+            <Icon name={item.icon} class="size-5" />
+            <h3 class="mt-4 text-lg font-medium tracking-tight">{item.title}</h3>
+            <p class="mt-1.5 text-muted">{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

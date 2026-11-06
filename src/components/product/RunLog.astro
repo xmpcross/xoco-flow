@@ -1,0 +1,77 @@
+---
+import AppIcon from "@/components/ui/AppIcon.astro";
+import Icon from "@/components/ui/Icon.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const steps = [
+  { title: "Deal moved to Closed won", app: "hubspot", time: "0.2s" },
+  {
+    title: "Drafted onboarding plan",
+    agent: true,
+    time: "18.4s",
+    output: "Kickoff Oct 14 · 3 milestones · Owner: Maya Chen",
+  },
+  { title: "Approved by Maya Chen", app: "slack", time: "1m 32s" },
+  { title: "Created onboarding project", app: "linear", time: "0.9s" },
+  { title: "Created subscription", app: "stripe", time: "0.6s" },
+];
+---
+
+<div class:list={["run-log", className]}>
+  <div class="flex items-baseline justify-between gap-4 border-b border-line px-5 py-4">
+    <div>
+      <p class="text-[0.9375rem] font-semibold tracking-[-0.01em]">Run 4,812</p>
+      <p class="text-[0.8125rem] text-muted">Fernway · started 10:42</p>
+    </div>
+    <span class="inline-flex items-center gap-1.5 rounded-md bg-mint-soft px-2 py-0.5 text-[0.75rem] font-medium text-green">
+      <Icon name="check" class="size-3" stroke={3} /> Completed
+    </span>
+  </div>
+  <ol class="px-5 py-3">
+    {
+      steps.map((step) => (
+        <li class="run-step relative grid grid-cols-[1.25rem_1fr_auto] gap-x-3 py-2.5">
+          <span class="relative z-10 mt-0.5 grid size-5 place-items-center rounded-full bg-green text-white">
+            <Icon name="check" class="size-3" stroke={3} />
+          </span>
+          <span class="min-w-0">
+            <span class="flex items-center gap-2 text-[0.875rem] leading-snug font-medium">
+              {step.app ? (
+                <AppIcon name={step.app} class="size-5" bare />
+              ) : (
+                <span class="grid size-5 place-items-center rounded-md bg-ink text-mint">
+                  <Icon name="bot" class="size-3" stroke={2.2} />
+                </span>
+              )}
+              <span class="truncate">{step.title}</span>
+            </span>
+            {step.output && <span class="mt-2 block rounded-lg bg-wash px-2.5 py-2 font-mono text-[0.75rem] leading-relaxed text-muted">{step.output}</span>}
+          </span>
+          <span class="mt-0.5 text-[0.8125rem] text-muted tabular">{step.time}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="flex flex-wrap gap-x-5 gap-y-1 border-t border-line px-5 py-3 text-[0.8125rem] text-muted">
+    <span><span class="font-medium text-ink tabular">2m 14s</span> total</span>
+    <span><span class="font-medium text-ink">5</span> steps</span>
+    <span><span class="font-medium text-ink">0</span> retries</span>
+  </div>
+</div>
+
+<style>
+  .run-step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: calc(0.625rem - 0.75px);
+    top: 1.85rem;
+    bottom: -0.35rem;
+    width: 1.5px;
+    background: var(--line);
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import AppIcon from "@/components/ui/AppIcon.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { closing } from "@/config/home";
+import { siteConfig } from "@/config/site";
+
+interface Props {
+  title?: string;
+  body?: string;
+  class?: string;
+}
+
+const { title = closing.title, body = closing.body, class: className } = Astro.props;
+const { primary, secondary } = siteConfig.actions;
+
+const runs = [
+  { app: "hubspot", title: "Lead routed to Ana Ruiz", time: "41s" },
+  { app: "xero", title: "Invoice reminder sent", time: "3s" },
+  { app: "okta", title: "Access granted to 7 apps", time: "1m 12s" },
+  { app: "zendesk", title: "Ticket routed to Billing", time: "6s" },
+];
+---
+
+<section class:list={["pb-16 sm:pb-24", className]} aria-labelledby="closing-title">
+  <div class="shell">
+    <div class="on-night reveal grid items-center gap-12 overflow-hidden rounded-3xl px-6 py-14 sm:px-12 sm:py-16 lg:grid-cols-12 lg:px-16 lg:py-20">
+      <div class="lg:col-span-6">
+        <h2 id="closing-title" class="text-display-lg">{title}</h2>
+        <p class="mt-5 max-w-lg text-lead text-muted">{body}</p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href={primary.href} class="btn btn-mint btn-lg">
+            {primary.label}
+            <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+          </a>
+          <a href={secondary.href} class="btn btn-secondary btn-lg">{secondary.label}</a>
+        </div>
+      </div>
+
+      <ul class="grid gap-2.5 lg:col-span-5 lg:col-start-8" aria-hidden="true">
+        {
+          runs.map((run, index) => (
+            <li class="run-row flex items-center gap-3 rounded-xl bg-night-raised p-2.5 pr-4 ring-1 ring-night-line" style={`--i:${index}`}>
+              <AppIcon name={run.app} class="size-9" />
+              <span class="min-w-0 flex-1 truncate text-[0.9375rem] font-medium">{run.title}</span>
+              <span class="text-sm text-night-muted tabular">{run.time}</span>
+              <span class="grid size-5 place-items-center rounded-full bg-mint text-night">
+                <Icon name="check" class="size-3" stroke={3} />
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .run-row:nth-child(even) {
+    margin-left: 1.5rem;
+  }
+
+  @media (min-width: 64rem) {
+    .run-row:nth-child(even) {
+      margin-left: 2.5rem;
+      margin-right: -1rem;
+    }
+  }
+</style>

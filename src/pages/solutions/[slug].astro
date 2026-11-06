@@ -1,0 +1,204 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { Image } from "astro:assets";
+import Closing from "@/components/home/Closing.astro";
+import Faq from "@/components/home/Faq.astro";
+import Stats from "@/components/home/Stats.astro";
+import AppWindow from "@/components/product/AppWindow.astro";
+import FlowNode from "@/components/product/FlowNode.astro";
+import AppIcon from "@/components/ui/AppIcon.astro";
+import CompanyLogo from "@/components/ui/CompanyLogo.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { storyFor } from "@/config/customers";
+import { integration } from "@/config/integrations";
+import { siteConfig } from "@/config/site";
+import { solutionAppsTitle, solutionPages } from "@/config/solutions";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export const getStaticPaths = (() =>
+  solutionPages.map((page) => ({ params: { slug: page.slug }, props: { page } }))) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { page } = Astro.props;
+const { primary, secondary } = siteConfig.actions;
+const story = storyFor(page.story);
+---
+
+<BaseLayout title={`${siteConfig.name} for ${page.name.toLowerCase()}`} description={page.lead} image={page.photo} imageAlt={page.photoAlt}>
+  <section class="pt-12 pb-16 sm:pt-16 lg:pb-24" aria-labelledby="solution-title">
+    <div class="shell grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-6">
+        <nav aria-label="Breadcrumb" class="rise">
+          <ol class="flex items-center gap-2 text-sm text-muted">
+            <li><a href="/" class="hover:text-ink">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><span>Solutions</span></li>
+            <li aria-hidden="true">/</li>
+            <li><a href={`/solutions/${page.slug}/`} aria-current="page" class="text-ink">{page.name}</a></li>
+          </ol>
+        </nav>
+        <h1 id="solution-title" class="rise mt-6 text-display-lg" style="--i:1">{page.title}</h1>
+        <p class="rise mt-6 max-w-xl text-lead text-muted" style="--i:2">{page.lead}</p>
+        <div class="rise mt-9 flex flex-wrap gap-3" style="--i:3">
+          <a href={primary.href} class="btn btn-primary btn-lg">
+            {primary.label}
+            <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+          </a>
+          <a href={secondary.href} class="btn btn-secondary btn-lg">{secondary.label}</a>
+        </div>
+      </div>
+      <div class="rise relative lg:col-span-6" style="--i:2">
+        <Image
+          src={page.photo}
+          alt={page.photoAlt}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 64rem) 37rem, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="aspect-5/4 w-full rounded-3xl object-cover"
+        />
+        <div class="absolute bottom-5 left-5 flex items-center gap-3 rounded-xl bg-surface py-2.5 pr-4 pl-2.5 shadow-(--shadow-window) ring-1 ring-line sm:bottom-7 sm:left-7" aria-hidden="true">
+          <AppIcon name={page.chip.app} class="size-9" />
+          <span>
+            <span class="block text-sm font-semibold">{page.chip.title}</span>
+            <span class="block text-xs text-muted">{page.chip.detail}</span>
+          </span>
+          <span class="ml-2 grid size-5 place-items-center rounded-full bg-green text-white">
+            <Icon name="check" class="size-3" stroke={3} />
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Stats items={page.metrics} />
+
+  <section id="workflows" class="section bg-wash" aria-labelledby="workflows-title">
+    <div class="shell">
+      <div class="reveal max-w-2xl">
+        <h2 id="workflows-title" class="text-display-lg">{page.workflows.title}</h2>
+        <p class="mt-5 text-lead text-muted">{page.workflows.lead}</p>
+      </div>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          page.workflows.items.map((item, index) => (
+            <li class="card reveal flex flex-col p-6" style={`--i:${index % 3}`}>
+              <span class="flex items-center" aria-hidden="true">
+                {item.apps.map((app, i) => (
+                  <>
+                    {i > 0 && <span class="h-px w-4 bg-line-strong" />}
+                    <AppIcon name={app} class="size-9" />
+                  </>
+                ))}
+              </span>
+              <h3 class="mt-6 text-lg font-medium tracking-tight">{item.title}</h3>
+              <p class="mt-1.5 text-muted">{item.body}</p>
+              <p class="sr-only">Uses {item.apps.map((app) => integration(app)?.name ?? app).join(", ")}.</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="featured-title">
+    <div class="shell grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+      <div class="reveal lg:col-span-5">
+        <h2 id="featured-title" class="text-display-lg">{page.featured.title}</h2>
+        <p class="mt-5 text-lead text-muted">{page.featured.lead}</p>
+        <ol class="mt-10 grid gap-7">
+          {
+            page.featured.steps.map((step, index) => (
+              <li class="grid grid-cols-[2rem_1fr] gap-4">
+                <span class="grid size-8 place-items-center rounded-lg bg-mint text-sm font-semibold tabular">{index + 1}</span>
+                <span>
+                  <span class="block text-lg font-medium tracking-tight">{step.title}</span>
+                  <span class="mt-1 block text-muted">{step.body}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div class="reveal lg:col-span-6 lg:col-start-7">
+        <div class="dot-grid rounded-3xl p-3 sm:p-8">
+          <AppWindow trail={["Workflows", page.featured.window]} status="Live">
+            <div class="dot-grid grid justify-items-center bg-surface! px-4 py-7 sm:px-8">
+              {
+                page.featured.nodes.map((node, index) => (
+                  <>
+                    {index > 0 && <span class="block h-5 w-[1.5px] bg-line-strong" />}
+                    <FlowNode {...node} class="w-full max-w-76" />
+                  </>
+                ))
+              }
+            </div>
+          </AppWindow>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    story && (
+      <section class="pb-20 sm:pb-28" aria-label={`${story.company} customer story`}>
+        <div class="shell">
+          <div class="reveal on-night grid overflow-hidden rounded-3xl md:grid-cols-12">
+            <figure class="flex flex-col p-7 sm:p-10 md:col-span-8 lg:p-14">
+              <CompanyLogo name={story.company} class="text-lg" />
+              <blockquote class="mt-8 text-[clamp(1.35rem,1.1rem+0.9vw,2rem)] leading-snug font-medium tracking-[-0.025em]">
+                <p>“{story.quote}”</p>
+              </blockquote>
+              <figcaption class="mt-auto flex flex-wrap items-end justify-between gap-6 pt-10">
+                <span>
+                  <span class="block font-medium">{story.name}</span>
+                  <span class="block text-muted">{story.role}, {story.company}</span>
+                </span>
+                <span class="text-right">
+                  <span class="block text-display-md text-mint tabular">{story.metric.value}</span>
+                  <span class="block text-sm text-muted">{story.metric.label}</span>
+                </span>
+              </figcaption>
+            </figure>
+            <div class="md:col-span-4 md:order-first">
+              <Image
+                src={story.photo}
+                alt={`${story.name}, ${story.role} at ${story.company}`}
+                widths={[400, 640, 800]}
+                sizes="(min-width: 48rem) 30vw, 100vw"
+                class="aspect-4/3 size-full object-cover object-top md:aspect-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="pb-20 sm:pb-28" aria-labelledby="apps-title">
+    <div class="shell">
+      <div class="flex flex-wrap items-end justify-between gap-6 border-t border-line pt-14">
+        <h2 id="apps-title" class="reveal text-display-md">{solutionAppsTitle}</h2>
+        <a href="/integrations/" class="arrow-link reveal group">
+          All integrations
+          <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+        </a>
+      </div>
+      <ul class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {
+          page.apps.map((app) => (
+            <li class="flex items-center gap-3 rounded-xl bg-surface p-3 shadow-[inset_0_0_0_1px_var(--line)]">
+              <AppIcon name={app} class="size-10" />
+              <span class="font-medium">{integration(app)?.name ?? app}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Faq id="solution-faq" {...page.faq} class="bg-wash" />
+
+  <Closing title={page.closing.title} body={page.closing.body} class="pt-16 sm:pt-24" />
+</BaseLayout>

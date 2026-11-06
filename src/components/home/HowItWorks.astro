@@ -1,0 +1,156 @@
+---
+import AppWindow from "@/components/product/AppWindow.astro";
+import Canvas from "@/components/product/Canvas.astro";
+import Composer from "@/components/product/Composer.astro";
+import RunLog from "@/components/product/RunLog.astro";
+import { howItWorks } from "@/config/home";
+import { siteConfig } from "@/config/site";
+
+const { id, title, lead, steps } = howItWorks;
+const windows = [
+  { trail: ["Workflows", "New workflow"], status: undefined },
+  { trail: ["Workflows", "New customer onboarding"], status: "Draft" },
+  { trail: ["Runs", "New customer onboarding"], status: "Live" },
+];
+---
+
+<section id={id} class="section" aria-labelledby={`${id}-title`}>
+  <div class="shell">
+    <div class="grid gap-6 lg:grid-cols-2 lg:items-end lg:gap-16">
+      <h2 id={`${id}-title`} class="reveal text-display-lg">{title}</h2>
+      <p class="reveal text-lead text-muted lg:pb-1">{lead}</p>
+    </div>
+
+    <div class="mt-12 lg:mt-16" data-tabs data-autoplay="7000">
+      <div class="grid gap-2 sm:grid-cols-3 sm:gap-6" role="tablist" aria-label={`How ${siteConfig.name} works`}>
+        {
+          steps.map((step, index) => (
+            <button
+              type="button"
+              id={`how-tab-${step.id}`}
+              class="how-tab group text-left"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              aria-controls={`how-panel-${step.id}`}
+              tabindex={index === 0 ? 0 : -1}
+              data-tab
+            >
+              <span class="tab-bar" aria-hidden="true" />
+              <span class="mt-4 flex items-baseline gap-2 text-sm text-muted">
+                <span class="tabular">0{index + 1}</span>
+                <span class="font-medium">{step.label}</span>
+              </span>
+              <span class="mt-1.5 block text-title">{step.title}</span>
+              <span class="tab-body mt-2 block text-muted">{step.body}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="dot-grid mt-10 grid rounded-3xl p-3 sm:p-8 lg:p-14">
+        {
+          steps.map((step, index) => (
+            <div
+              id={`how-panel-${step.id}`}
+              class="how-panel mx-auto w-full max-w-3xl"
+              role="tabpanel"
+              aria-labelledby={`how-tab-${step.id}`}
+              data-panel
+              data-active={index === 0 ? "" : undefined}
+              inert={index !== 0}
+            >
+              <AppWindow trail={windows[index].trail} status={windows[index].status}>
+                {index === 0 && <Composer />}
+                {index === 1 && <Canvas class="bg-surface!" />}
+                {index === 2 && <RunLog />}
+              </AppWindow>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how-tab {
+    padding-bottom: 0.5rem;
+  }
+
+  .tab-bar {
+    position: relative;
+    display: block;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--line);
+  }
+
+  .tab-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .how-tab[aria-selected="true"] .tab-bar::after {
+    transform: none;
+  }
+
+  [data-playing] .how-tab[aria-selected="true"] .tab-bar::after {
+    animation: tab-progress var(--tab-duration, 7s) linear both;
+  }
+
+  @keyframes tab-progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  .how-tab .tab-body,
+  .how-tab .text-title {
+    transition: color 0.2s;
+  }
+
+  .how-tab[aria-selected="false"] .text-title {
+    color: var(--muted);
+  }
+
+  .how-tab[aria-selected="false"]:hover .text-title {
+    color: var(--ink);
+  }
+
+  @media (max-width: 39.99rem) {
+    .how-tab[aria-selected="false"] .tab-body {
+      display: none;
+    }
+  }
+
+  .how-panel {
+    grid-area: 1 / 1;
+    align-self: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 0.35s,
+      transform 0.5s var(--ease-out-expo);
+  }
+
+  .how-panel[data-active] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition:
+      opacity 0.35s 0.05s,
+      transform 0.5s var(--ease-out-expo) 0.05s;
+  }
+</style>
+
+<script>
+  import { initTabs } from "@/scripts/tabs";
+  initTabs();
+</script>

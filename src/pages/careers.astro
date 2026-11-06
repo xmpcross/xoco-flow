@@ -1,0 +1,193 @@
+---
+import { Image } from "astro:assets";
+import Stats from "@/components/home/Stats.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { careers } from "@/config/careers";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const teams = [...new Set(careers.roles.map((role) => role.team))];
+const teamId = (team: string) => team.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+---
+
+<BaseLayout title="Careers" description={careers.lead} image={careers.photo} imageAlt={careers.photoAlt}>
+  <section class="pt-14 sm:pt-20" aria-labelledby="careers-title">
+    <div class="shell">
+      <div class="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
+        <div class="lg:col-span-7">
+          <h1 id="careers-title" class="rise text-display-xl">{careers.title}</h1>
+        </div>
+        <div class="lg:col-span-5 lg:pb-2">
+          <p class="rise text-lead text-muted" style="--i:1">{careers.lead}</p>
+          <a href="#roles" class="rise btn btn-primary mt-7" style="--i:2">
+            See open roles
+            <span class="rounded bg-white/15 px-1.5 py-0.5 text-xs tabular">{careers.roles.length}</span>
+          </a>
+        </div>
+      </div>
+      <Image
+        src={careers.photo}
+        alt={careers.photoAlt}
+        widths={[800, 1200, 1600, 2000]}
+        sizes="(min-width: 80rem) 1216px, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="rise mt-12 aspect-video w-full rounded-3xl object-cover sm:mt-16"
+        style="--i:3"
+      />
+    </div>
+  </section>
+
+  <Stats items={careers.facts} class="pt-16 sm:pt-20" />
+
+  <section class="section bg-wash" aria-labelledby="values-title">
+    <div class="shell">
+      <h2 id="values-title" class="reveal text-display-md">{careers.valuesTitle}</h2>
+      <ol class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        {
+          careers.values.map((value, index) => (
+            <li class="reveal border-t border-line-strong pt-6" style={`--i:${index}`}>
+              <span class="text-sm text-muted tabular">0{index + 1}</span>
+              <h3 class="mt-3 text-title">{value.title}</h3>
+              <p class="mt-2 text-muted">{value.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="benefits-title">
+    <div class="shell grid gap-12 lg:grid-cols-12 lg:gap-10">
+      <h2 id="benefits-title" class="reveal text-display-md lg:col-span-4">{careers.benefitsTitle}</h2>
+      <ul class="grid gap-x-8 sm:grid-cols-2 lg:col-span-8">
+        {
+          careers.benefits.map((benefit, index) => (
+            <li class="reveal flex gap-4 border-t border-line py-6" style={`--i:${index % 2}`}>
+              <span class="grid size-10 shrink-0 place-items-center rounded-lg bg-mint">
+                <Icon name={benefit.icon} class="size-5" />
+              </span>
+              <span>
+                <span class="block font-medium">{benefit.title}</span>
+                <span class="mt-1 block text-muted">{benefit.body}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="roles" class="pb-20 sm:pb-28" aria-labelledby="roles-title" data-roles>
+    <div class="shell">
+      <div class="flex flex-wrap items-end justify-between gap-6 border-t border-line pt-14">
+        <h2 id="roles-title" class="reveal text-display-md">
+          {careers.rolesTitle}
+          <span class="ml-1 text-muted tabular">({careers.roles.length})</span>
+        </h2>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by team" data-role-filters hidden>
+          <button type="button" class="role-filter" aria-pressed="true" data-team="all">All</button>
+          {
+            teams.map((team) => (
+              <button type="button" class="role-filter" aria-pressed="false" data-team={teamId(team)}>
+                {team}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="mt-10 grid gap-12">
+        {
+          teams.map((team) => (
+            <div class="grid gap-3 lg:grid-cols-12 lg:gap-8" data-team-group={teamId(team)}>
+              <h3 class="text-lg font-medium lg:col-span-3 lg:pt-5">{team}</h3>
+              <ul class="divide-y divide-line border-y border-line lg:col-span-9">
+                {careers.roles
+                  .filter((role) => role.team === team)
+                  .map((role) => {
+                    const Row = role.applyUrl ? "a" : "div";
+                    return (
+                      <li>
+                        <Row
+                          href={role.applyUrl || undefined}
+                          class="role-row group grid items-center gap-x-6 gap-y-1 py-5 sm:grid-cols-[1fr_auto] lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)_6rem_1.5rem]"
+                        >
+                          <span class="text-[1.05rem] font-medium">{role.title}</span>
+                          <span class="text-sm text-muted lg:text-base">{role.location}</span>
+                          <span class="hidden text-muted lg:block">{role.type}</span>
+                          {role.applyUrl && <Icon name="arrow-right" class="btn-arrow hidden size-4 lg:inline-grid" stroke={2} />}
+                        </Row>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-16 sm:pb-24">
+    <div class="shell">
+      <div class="on-night reveal flex flex-col gap-8 rounded-3xl px-6 py-14 sm:px-12 lg:flex-row lg:items-end lg:justify-between lg:px-16">
+        <div class="max-w-xl">
+          <h2 class="text-display-md">{careers.closing.title}</h2>
+          <p class="mt-4 text-lead text-muted">{careers.closing.body}</p>
+        </div>
+        <a href={careers.closing.cta.href} class="btn btn-mint btn-lg shrink-0 self-start lg:self-auto">
+          {careers.closing.cta.label}
+          <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .role-row[href]:hover span:first-child {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .role-filter {
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--muted);
+    box-shadow: inset 0 0 0 1px var(--line);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .role-filter:hover {
+    color: var(--ink);
+  }
+
+  .role-filter[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--page);
+    box-shadow: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-roles]");
+  const filters = root?.querySelector<HTMLElement>("[data-role-filters]");
+
+  if (root && filters) {
+    filters.hidden = false;
+    const buttons = [...filters.querySelectorAll<HTMLButtonElement>("[data-team]")];
+    const groups = [...root.querySelectorAll<HTMLElement>("[data-team-group]")];
+
+    buttons.forEach((button) =>
+      button.addEventListener("click", () => {
+        const team = button.dataset.team;
+        buttons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+        groups.forEach((group) => (group.hidden = team !== "all" && group.dataset.teamGroup !== team));
+      }),
+    );
+  }
+</script>

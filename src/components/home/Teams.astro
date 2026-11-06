@@ -1,0 +1,133 @@
+---
+import { Image } from "astro:assets";
+import AppIcon from "@/components/ui/AppIcon.astro";
+import Icon from "@/components/ui/Icon.astro";
+import SectionHead from "@/components/ui/SectionHead.astro";
+import { teams } from "@/config/home";
+import { siteConfig } from "@/config/site";
+
+const { id, title, lead, items } = teams;
+---
+
+<section id={id} class="section bg-wash" aria-labelledby={`${id}-title`}>
+  <div class="shell">
+    <SectionHead id={`${id}-title`} title={title} lead={lead} />
+
+    <div class="mt-10" data-tabs>
+      <div class="grid grid-cols-2 gap-1 rounded-xl bg-surface p-1 shadow-[inset_0_0_0_1px_var(--line)] sm:flex sm:w-fit" role="tablist" aria-label="Teams">
+        {
+          items.map((item, index) => (
+            <button
+              type="button"
+              id={`team-tab-${item.id}`}
+              class="team-tab"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              aria-controls={`team-panel-${item.id}`}
+              tabindex={index === 0 ? 0 : -1}
+              data-tab
+            >
+              {item.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="mt-8 grid">
+        {
+          items.map((item, index) => (
+            <div
+              id={`team-panel-${item.id}`}
+              class="team-panel grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+              role="tabpanel"
+              aria-labelledby={`team-tab-${item.id}`}
+              data-panel
+              data-active={index === 0 ? "" : undefined}
+              inert={index !== 0}
+            >
+              <div class="max-lg:order-2">
+                <h3 class="text-display-md">{item.title}</h3>
+                <p class="mt-4 text-lead text-muted">{item.body}</p>
+                <ul class="mt-7 grid gap-3 border-t border-line pt-7">
+                  {item.workflows.map((workflow) => (
+                    <li class="flex items-center gap-3 font-medium">
+                      <span class="grid size-6 place-items-center rounded-md bg-mint">
+                        <Icon name="check" class="size-3.5" stroke={2.5} />
+                      </span>
+                      {workflow}
+                    </li>
+                  ))}
+                </ul>
+                <a href={item.href} class="btn btn-primary mt-9">
+                  {siteConfig.name} for {item.label.toLowerCase()}
+                  <Icon name="arrow-right" class="btn-arrow" stroke={2} />
+                </a>
+              </div>
+
+              <div class="relative">
+                <Image
+                  src={item.photo}
+                  alt={item.photoAlt}
+                  widths={[600, 900, 1200]}
+                  sizes="(min-width: 64rem) 36rem, 100vw"
+                  class="aspect-4/3 w-full rounded-2xl object-cover"
+                />
+                <div class="absolute bottom-4 left-4 flex items-center gap-3 rounded-xl bg-surface py-2.5 pr-4 pl-2.5 shadow-(--shadow-window) ring-1 ring-line sm:bottom-6 sm:left-6" aria-hidden="true">
+                  <AppIcon name={item.chip.app} class="size-9" />
+                  <span>
+                    <span class="block text-sm font-semibold">{item.chip.title}</span>
+                    <span class="block text-xs text-muted">{item.chip.detail}</span>
+                  </span>
+                  <span class="ml-2 grid size-5 place-items-center rounded-full bg-green text-white">
+                    <Icon name="check" class="size-3" stroke={3} />
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-tab {
+    flex: none;
+    padding: 0.55rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .team-tab:hover {
+    color: var(--ink);
+  }
+
+  .team-tab[aria-selected="true"] {
+    background: var(--ink);
+    color: var(--page);
+  }
+
+  .team-panel {
+    grid-area: 1 / 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .team-panel[data-active] {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.35s;
+  }
+</style>
+
+<script>
+  import { initTabs } from "@/scripts/tabs";
+  initTabs();
+</script>
